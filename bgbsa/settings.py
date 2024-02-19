@@ -9,12 +9,19 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import sys
 from pathlib import Path
+
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+environ.Env.read_env(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -23,9 +30,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8*&slvxmtg6pyqu)b_@oh&uib&ua&hv_e1z0&%lwd3-hw2efdc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    # '178.128.29.29',
+    'bgbsa.co.za',
+    'www.bgbsa.co.za',
+]
 
 
 # Application definition
@@ -37,6 +49,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # apps
+    'main.apps.MainConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -116,8 +131,92 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static'
+
+
+# logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s %(levelname)-8s %(name)s - %(message)s',
+        },
+        'compact': {
+            'format': '%(asctime)s %(levelname)s - %(message)s',
+        }
+    },
+    'handlers': {
+        'django': {
+            'level': 'DEBUG',
+            # 'class': 'logging.StreamHandler',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'when': 'midnight',
+            'backupCount': 30,
+            'delay': True,
+            'formatter': 'standard',
+        },
+        'default': {
+            'level': 'DEBUG',
+            # 'class': 'logging.StreamHandler',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': BASE_DIR / 'logs' / 'default.log',
+            'when': 'midnight',
+            'backupCount': 30,
+            'delay': True,
+            'formatter': 'standard',
+        },
+        'cmds': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': BASE_DIR / 'logs' / 'cmds.log',
+            'when': 'midnight',
+            'backupCount': 30,
+            'delay': True,
+            'formatter': 'standard',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+            'formatter': 'compact',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'bgbsa': {
+            'handlers': ['default', 'console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'main': {
+            'handlers': ['default', 'console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['django'],
+            'level': 'DEBUG',
+            'propagate': False,
+        }
+    }
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# crispy forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_FAIL_SILENTLY = not DEBUG
+
+EMAIL_API_URL = env('EMAIL_API_URL')
+EMAIL_API_KEY = env('EMAIL_API_KEY')
+EMAIL_DEFAULT_FROM = env('EMAIL_DEFAULT_FROM')
+EMAIL_DEFAULT_REPLY_TO = env('EMAIL_DEFAULT_REPLY_TO')
