@@ -2,7 +2,7 @@ import logging
 
 from django.core.management import BaseCommand
 
-from main.send_emails import _send_smtp2go_api_email
+from main.emails import _send_smtp2go_api_email
 
 logger = logging.getLogger(__name__)
 

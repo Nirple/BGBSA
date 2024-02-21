@@ -1,4 +1,5 @@
 django==5.0.2
+django-allauth==0.61.1
 django-crispy-forms==2.1
 django-environ==0.11.2
 

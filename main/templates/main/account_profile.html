@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account profile</title>
+</head>
+<body>
+{{ user.email }}
+{{ user.username }}
+<button><a href="{% url 'account_logout' %}">Log out</a></button>
+</body>
+</html>

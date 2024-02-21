@@ -2,8 +2,15 @@ import logging
 
 import requests
 from django.conf import settings
+from django.core.mail.backends.base import BaseEmailBackend
 
 logger = logging.getLogger(__name__)
+
+
+class SMTP2GOBackend(BaseEmailBackend):
+
+    def send_messages(self, email_messages):
+
 
 
 def _send_smtp2go_api_email(subject: str, message: str, to: list) -> dict:
