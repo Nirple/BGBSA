@@ -9,6 +9,13 @@ def accounts_profile_view(request: WSGIRequest):
     return render(request, 'main/account_profile.html', ctx)
 
 
+def accounts_selling_view(request: WSGIRequest):
+    ctx = {
+        'user': request.user,
+    }
+    return render(request, 'main/account_profile.html', ctx)
+
+
 def home_view(request: WSGIRequest):
     ctx = {
     }

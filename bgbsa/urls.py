@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('accounts/profile/', views.accounts_profile_view, name='account_profile'),
-    path('/', views.home_view, name='home'),
+    path('accounts/selling/', views.accounts_selling_view, name='account_selling'),
+    path('', views.home_view, name='home'),
 ]

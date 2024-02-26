@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Account profile</title>
-</head>
-<body>
-{{ user.email }}
-{{ user.username }}
-<button><a href="{% url 'account_logout' %}">Log out</a></button>
-</body>
-</html>
+{% extends 'main/base.html' %}
+{% block content %}
+    <h3>Your details</h3>
+    <p>Username: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+{% endblock %}
