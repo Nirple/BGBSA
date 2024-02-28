@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -55,6 +56,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    # forms
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +91,10 @@ TEMPLATES = [
         },
     },
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_FAIL_SILENTLY = not DEBUG
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -175,43 +183,25 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
 
-# logging
+# Log settings
+# https://docs.djangoproject.com/en/2.2/topics/logging/
+LOG_LEVEL = 'DEBUG' if DEBUG else 'INFO'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'standard': {
-            'format': '%(asctime)s %(levelname)-8s %(name)s - %(message)s',
+            'format': '%(asctime)s %(levelname)-8s - %(message)s (%(name)s:%(lineno)d)',
         },
         'compact': {
-            'format': '%(asctime)s %(levelname)s - %(message)s',
+            'format': '%(levelname)s - %(message)s',
         }
     },
     'handlers': {
-        'django': {
-            'level': 'DEBUG',
-            # 'class': 'logging.StreamHandler',
+        'file': {
+            'level': LOG_LEVEL,
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': BASE_DIR / 'logs' / 'django.log',
-            'when': 'midnight',
-            'backupCount': 30,
-            'delay': True,
-            'formatter': 'standard',
-        },
-        'default': {
-            'level': 'DEBUG',
-            # 'class': 'logging.StreamHandler',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': BASE_DIR / 'logs' / 'default.log',
-            'when': 'midnight',
-            'backupCount': 30,
-            'delay': True,
-            'formatter': 'standard',
-        },
-        'cmds': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': BASE_DIR / 'logs' / 'cmds.log',
+            'filename': BASE_DIR / 'logs' / 'wsgi.log',
             'when': 'midnight',
             'backupCount': 30,
             'delay': True,
@@ -224,27 +214,17 @@ LOGGING = {
             'formatter': 'compact',
         },
     },
+    'root': {
+        'handlers': ['file', 'console'],
+        'level': LOG_LEVEL,
+        'propagate': False,
+    },
     'loggers': {
-        '': {
-            'handlers': ['console'],
+        'django': {
+            'handlers': [],
             'level': 'DEBUG',
             'propagate': True,
         },
-        'bgbsa': {
-            'handlers': ['default', 'console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-        'main': {
-            'handlers': ['default', 'console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-        'django': {
-            'handlers': ['django'],
-            'level': 'DEBUG',
-            'propagate': False,
-        }
     }
 }
 
@@ -252,10 +232,6 @@ LOGGING = {
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# crispy forms
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-CRISPY_FAIL_SILENTLY = not DEBUG
 
 if env('DEVELOPER'):
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

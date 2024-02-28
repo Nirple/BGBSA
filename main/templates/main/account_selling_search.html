@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <h3 class="mb-5">Selling</h3>
+    <p>Search</p>
+    <form method="post" class="my-class">
+        {% crispy form %}
+    </form>
+
+    {% if empty %}
+        <div class="alert alert-info">No results</div>
+    {% elif results %}
+        <h4 class="mt-3">Search results</h4>
+        <ul>
+            {% for result in results %}
+                <li>
+                    <a href="{% url 'account_selling_create' i=forloop.counter0 %}">{{ result.name }} [{{ result.year }}]</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

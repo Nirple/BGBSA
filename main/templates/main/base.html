@@ -23,11 +23,22 @@
 </head>
 <body>
 <div class="container-fluid">
+
     {% include 'main/navbar.html' %}
+
+    {% if messages %}
+    <div class="px-5 py-3">
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="p-5">
         {% block content %}
         {% endblock %}
     </div>
+
 </div>
 </body>
 </html>

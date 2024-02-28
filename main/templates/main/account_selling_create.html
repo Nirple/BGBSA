@@ -1,0 +1,9 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <h3 class="mb-5">Selling</h3>
+    <h4 class="py-3">{{ item.name }} [{{ item.year }}]</h4>
+    <form method="post" class="my-class">
+        {% crispy form %}
+    </form>
+{% endblock %}

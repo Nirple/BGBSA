@@ -1,0 +1,40 @@
+{% extends 'main/base.html' %}
+{% load humanize %}
+{% load custom_filters %}
+{% block content %}
+    <h3 class="mb-5">
+        Selling
+        <a href="{% url 'account_selling_search' %}">
+            <button class="btn btn-primary float-end">
+                <i class="bi bi-file-earmark-plus"></i> List new game
+            </button>
+        </a>
+    </h3>
+
+    <h4>Active listings</h4>
+    {% if active %}
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for listing in active.all %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            {{ listing.game.name }}
+                        </div>
+                        <img src="{{ listing.game.img }}" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">R{{ listing.price|intcomma }}</h5>
+                            <p class="card-text font-lighter">{{ listing.comment|slice_words:20 }}</p>
+                            <p class="text-xs">Condition: {{ listing.condition }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <div class="alert alert-light">You have no listings. Use the List new game button
+            in the top right of the page to add your board game you want to sell.
+        </div>
+    {% endif %}
+{% endblock %}
