@@ -1,15 +1,8 @@
 {% extends 'main/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <h3 class="mb-5">
-        Selling
-        <span class="float-end">
-            <a href="{% url 'account_selling' %}">
-                <button class="btn btn-secondary">Back</button>
-            </a>
-        </span>
-    </h3>
-    <p>Look up the game on boardgamegeek.com</p>
+    <h3 class="mb-5">Selling</h3>
+    <p>Search</p>
     <form method="post" class="my-class">
         {% crispy form %}
     </form>
@@ -21,7 +14,7 @@
         <ul>
             {% for result in results %}
                 <li>
-                    <a href="{% url 'account_selling_create' i=forloop.counter0 %}">{{ result.name }} [{{ result.year }}]</a>
+                    <a href="{% url 'account_selling_expand_' slug=listing.slug %}?i={{ forloop.counter0 }}">{{ result.name }} [{{ result.year }}]</a>
                 </li>
             {% endfor %}
         </ul>

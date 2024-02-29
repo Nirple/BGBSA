@@ -1,0 +1,40 @@
+{% extends 'main/base.html' %}
+{% load custom_filters %}
+{% block content %}
+
+    <div class="row row-cols-2">
+        <div class="col">
+            <h3>{{ listing.game.name }}</h3>
+            <h4 class="pt-2">{{ listing.price_fmt }}</h4>
+            <p class="pb-2 clr-lighter">Condition: {{ listing.condition }}</p>
+            <p><img class="img-fluid col-6" src="{{ listing.game.img }}"/></p>
+            {% if listing.comment %}
+                <h5 class="mt-2">Note:</h5>
+                <p>{{ listing.comment }}</p>
+            {% endif %}
+            {% if listing.bundle.count %}
+                <h4 class="mt-3">Includes the following:</h4>
+                {% for exp in listing.bundle.all %}
+                    <h5>
+                        <img class="img-fluid col-4" src="{{ exp.img }}"/>
+                        {{ exp.name }}
+                    </h5>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col">
+            <div class="alert alert-dark" role="alert">
+                <dl>
+                    <dt class="fs-4 mb-3">Seller details</dt>
+                    {% if user.is_authenticated %}
+                        <dd class="fs-5">Name: {{ listing.user.username }}</dd>
+                        <dd class="fs-5">Whatsapp: {{ listing.user.cell_number }}</dd>
+                    {% else %}
+                        <p class="fs-5">Please log in to view seller details.</p>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

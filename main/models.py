@@ -1,4 +1,7 @@
+import uuid
+
 from django.contrib.auth.models import User
+from django.contrib.humanize.templatetags.humanize import intcomma
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.safestring import mark_safe
@@ -19,6 +22,14 @@ CONDITION_CHOICES = [
 ]
 
 
+def generate_short_uuid():
+    """
+    Generate a shortened version of UUID.
+    """
+    full_uuid = str(uuid.uuid4())
+    return full_uuid[:8]
+
+
 class TimestampModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -32,7 +43,7 @@ class Game(models.Model):
     year = models.IntegerField(
         validators=[MinValueValidator(-2500), MaxValueValidator(now().year + 1)])
     url = models.CharField(max_length=255)
-    rank = models.PositiveIntegerField()
+    rank = models.PositiveIntegerField(null=True)
     rating = models.PositiveIntegerField()
     subtype = models.CharField(max_length=50)
 
@@ -84,6 +95,8 @@ class Game(models.Model):
 class Listing(TimestampModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listings')
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='listings')
+    bundle = models.ManyToManyField(Game, related_name='bundle', blank=True)
+    slug = models.SlugField(default=generate_short_uuid, unique=True)
 
     price = models.IntegerField(validators=[MinValueValidator(100), MaxValueValidator(20_000)])
     is_negotiable = models.BooleanField(default=True)
@@ -99,4 +112,12 @@ class Listing(TimestampModel):
         unique_together = ('user', 'game')
 
     def __str__(self):
-        return f'{self.game.name} ({self.game.year})'
+        return f'{self.user.username}: {self.game.name}'
+
+    def price_fmt(self) -> str:
+        txt = 'R' + intcomma(self.price)
+        if not self.is_negotiable:
+            txt += '<br/><span class="text-sm"><i class="bi bi-exclamation-triangle"></i> price fixed</span>'
+        if self.is_shipping:
+            txt += '<br/><span class="text-sm"><i class="bi bi-truck"></i> incl shipping</span>'
+        return mark_safe(txt)

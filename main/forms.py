@@ -22,6 +22,37 @@ class SellingSearchForm(forms.Form):
         self.helper.add_input(Submit('submit', 'Search'))
 
 
+class SellingForm(forms.ModelForm):
+
+    class Meta:
+        model = Listing
+        fields = ['price', 'condition', 'comment', 'is_negotiable', 'is_shipping']
+        labels = {
+            'price': 'Asking Price (in Rands)',
+            'condition': 'Select the condition of the board game',
+            'comment': 'Add some extra details or sweeteners',
+            'is_negotiable': 'I am willing to negotiate on the price',
+            'is_shipping': 'I will pay for the shipping',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.add_input(Submit('submit', 'Submit'))
+
+    def save(self, user: User = None, game_info: dict = None, commit=True):
+        if user:
+            self.instance.user = user
+        if game_info:
+            game_data = scrape_game_by_id(game_info['id'])
+            game, _ = Game.objects.update_or_create(
+                id=game_info.pop('id'),
+                defaults=game_data
+            )
+            self.instance.game = game
+        super().save(commit)
+
+
 class SellingCreateForm(forms.ModelForm):
 
     class Meta:

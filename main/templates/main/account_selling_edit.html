@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <h3 class="mb-5">
+        <span class="float-end">
+            <a href="{% url 'account_selling' %}">
+                <button class="btn btn-secondary">Back</button>
+            </a>
+        </span>
+        Selling
+    </h3>
+    <h4 class="py-3">{{ listing.game.name }} [{{ listing.game.year }}]</h4>
+    <form method="post" class="my-class">
+        {% crispy form %}
+    </form>
+{% endblock %}

@@ -20,13 +20,17 @@ from django.urls import path, include
 from main import views
 
 urlpatterns = [
-    path('admin', admin.site.urls),
-    path('accounts', include('allauth.urls')),
+    path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
     path('accounts/profile', views.account_profile_view, name='account_profile'),
     path('accounts/selling', views.account_selling_view, name='account_selling'),
     path('accounts/selling/search', views.account_selling_search_view, name='account_selling_search'),
     path('accounts/selling/create/<int:i>', views.account_selling_create_view, name='account_selling_create'),
+    path('accounts/selling/edit/<slug:slug>', views.account_selling_edit_view, name='account_selling_edit'),
+    path('accounts/selling/expand/<slug:slug>', views.account_selling_expand_view, name='account_selling_expand'),
+    path('accounts/selling/expand/<slug:slug>/<int:pk>', views.account_selling_expand_remove_view, name='account_selling_expand_remove'),
 
-    path('selling', views.selling_view, name='selling'),
+    path('for_sale', views.for_sale_view, name='for_sale'),
+    path('for_sale/<slug:slug>', views.for_sale_detail_view, name='for_sale_detail'),
     path('', views.home_view, name='home'),
 ]

@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+from functools import lru_cache
 from time import sleep
 from typing import Optional
 
@@ -72,6 +73,7 @@ def get(url: str, custom_headers: dict = None) -> requests.Response:
     return res
 
 
+@lru_cache(maxsize=100)
 def bgg_search_name(name: str) -> list:
     raw = get(BGG_SEARCH_URL.format(name))
     res = raw.json()

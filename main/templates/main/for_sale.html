@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+{% load custom_filters %}
+{% block content %}
+
+    <div class="row">
+        <div class="col">
+            <h3>For Sale</h3>
+            <h5>{{ for_sale.count }} board games for sale</h5>
+
+            <div class="row row-cols-9 g-3 mt-4">
+                {% for listing in for_sale.all %}
+                    {% if forloop.counter0|divisibleby:9 %}
+                        </div><div class="row row-cols-9 g-3 mt-4">
+                    {% endif %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <img class="card-img-top" src="{{ listing.game.img }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ listing.game.name }}</h5>
+                                <p class="">{{ listing.price_fmt }}</p>
+                                {% if listing.bundle.count %}
+                                    <dl>
+                                        <dt>Including:</dt>
+                                        <dd class="text-sm">{% for exp in listing.bundle.all %}
+                                            <img class="img-fluid col-6" src="{{ exp.img }}"/><br/>
+                                            {{ exp.name }} ({{ exp.year }})<br/>
+                                        {% endfor %}</dd>
+                                    </dl>
+                                {% endif %}
+                                <a class="stretched-link" href="{% url 'for_sale_detail' slug=listing.slug %}"></a>
+                            </div>
+                            <div class="card-footer text-xs">
+                                Condition: {{ listing.condition }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+        </div>
+    </div>
+
+{% endblock %}

@@ -8,5 +8,5 @@ def list_user_active_selling(user: User) -> QuerySet:
     return user.listings.filter(is_sold=False)
 
 
-def selling_count() -> int:
-    return Listing.objects.filter(is_sold=False).count()
+def for_sale() -> int:
+    return Listing.objects.filter(is_sold=False)
