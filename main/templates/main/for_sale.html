@@ -13,18 +13,23 @@
                         </div><div class="row row-cols-9 g-3 mt-4">
                     {% endif %}
                     <div class="col">
-                        <div class="card h-100">
+                        <div class="card">
                             <img class="card-img-top" src="{{ listing.game.img }}">
                             <div class="card-body">
-                                <h5 class="card-title">{{ listing.game.name }}</h5>
+                                <h5 class="card-title">{{ listing.game.name }}{% if listing.game.subtype == 'boardgameexpansion' %}<span class="text-sm"> (exp)</span>{% endif %}</h5>
                                 <p class="">{{ listing.price_fmt }}</p>
                                 {% if listing.bundle.count %}
                                     <dl>
                                         <dt>Including:</dt>
-                                        <dd class="text-sm">{% for exp in listing.bundle.all %}
+                                        <dd class="text-sm">
+                                        {% for exp in listing.bundle.all|slice:":2" %}
                                             <img class="img-fluid col-6" src="{{ exp.img }}"/><br/>
-                                            {{ exp.name }} ({{ exp.year }})<br/>
-                                        {% endfor %}</dd>
+                                            {{ exp.name }}<br/>
+                                        {% endfor %}
+                                        {% if listing.bundle.count > 2 %}
+                                            <span class="fst-italic">and {{ listing.bundle.count|add:"-2" }} more...</span>
+                                        {% endif %}
+                                        </dd>
                                     </dl>
                                 {% endif %}
                                 <a class="stretched-link" href="{% url 'for_sale_detail' slug=listing.slug %}"></a>

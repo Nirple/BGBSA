@@ -13,3 +13,8 @@
 .row-cols-9 .col {
     max-width: 11.1%;
 }
+
+.p-close p {
+    margin: 0;
+    padding: 0;
+}

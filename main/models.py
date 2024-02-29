@@ -44,7 +44,7 @@ class Game(models.Model):
         validators=[MinValueValidator(-2500), MaxValueValidator(now().year + 1)])
     url = models.CharField(max_length=255)
     rank = models.PositiveIntegerField(null=True)
-    rating = models.PositiveIntegerField()
+    rating = models.FloatField(null=True)
     subtype = models.CharField(max_length=50)
 
     # details
@@ -83,13 +83,6 @@ class Game(models.Model):
             elif self.min_players <= cnt <= self.max_players:
                 cnts.append(f'<small class="text-muted">{cnt}</small>')
         return mark_safe('&nbsp;'.join(cnts))
-
-    def age_fmt(self) -> str:
-        if self.rec_min_age:
-            return f'{self.rec_min_age}+'
-        elif self.min_age:
-            return f'{self.min_age}+'
-        return ''
 
 
 class Listing(TimestampModel):
